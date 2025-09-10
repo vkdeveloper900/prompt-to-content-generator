@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Letter Generator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"></script>
+</head>
+<body class="bg-light">
+<div class="container mt-5 p-4 bg-white shadow rounded">
+  <h1 class="mb-4 text-center">AI Letter Generator</h1>
+  <textarea id="prompt" class="form-control mb-3" rows="4" placeholder="Enter letter details"></textarea>
+  <button id="generateBtn" class="btn btn-primary w-100 mb-3">Generate Letter</button>
+  <textarea id="letterOutput" class="form-control" rows="10"></textarea>
+</div>
+
+<script>
+let editorInstance;
+ClassicEditor.create(document.querySelector('#letterOutput')).then(editor => { editorInstance = editor; });
+
+document.getElementById('generateBtn').addEventListener('click', async () => {
+  const prompt = document.getElementById('prompt').value;
+  const btn = document.getElementById('generateBtn');
+  btn.disabled = true;
+  btn.innerText = 'Generating...';
+
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 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'
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: "You are a professional letter writer." },
+          { role: "user", content: prompt }
+        ]
+      })
+    });
+    const data = await res.json();
+    const letter = data.choices[0].message.content;
+    const paragraphs = letter.split(/\n\s*\n/);
+    editorInstance.setData(paragraphs.map(p => `<p>${p}</p>`).join(''));
+  } catch(err) {
+    alert('Error generating letter!');
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.innerText = 'Generate Letter';
+  }
+});
+</script>
+</body>
+</html>
