@@ -20,7 +20,7 @@
 ![Demo Screenshot]
 
 
-**Live Demo:** [https://your-username.github.io/prompt-to-content-generator](https://your-username.github.io/prompt-to-content-generator)
+**Live Demo:** [https://vkdeveloper900e.github.io/prompt-to-content-generator](https://vkdeveloper900.github.io/prompt-to-content-generator)
 
 ---
 
